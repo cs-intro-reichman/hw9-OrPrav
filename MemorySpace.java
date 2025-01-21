@@ -100,25 +100,13 @@ public class MemorySpace {
 	 *            the starting address of the block to freeList
 	 */
 	public void free(int address) {
-		
-		if (allocatedList == null || allocatedList.getSize() == 0) {
-			return; 
+		int index  = allocatedList.indexOf(address);
+		if (allocatedList.getFirst() == null || index == -1) {
+			throw new IllegalArgumentException(
+				"index must be between 0 and size");
 		}
-		Node current = allocatedList.getNode(0); // this is the first node of allocatedList 
-		// Search for a block whose base address equals baseAddress.
-		while (current != null) {	
-			int currentAddress = current.block.baseAddress;
-			if (currentAddress == address){
-				if (freeList == null) {
-					freeList.addFirst(new MemoryBlock(0, current.block.length));// 11 on the test thing why the fuck are you not warking
-			   }else{
-				freeList.addLast(new MemoryBlock(currentAddress, current.block.length));// add to freeList if it had somthing
-			   }
-				allocatedList.remove(current.block); // Delete from allocatedList
-				return;
-			}
-			current = current.next;
-		}
+		freeList.addLast(allocatedList.getBlock(index));// add to freeList
+		allocatedList.remove(allocatedList.getNode(index)); // Delete from allocatedList
 	}
 	
 	/**

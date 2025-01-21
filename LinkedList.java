@@ -185,6 +185,17 @@ public class LinkedList {
 		return -1;
 	}
 
+	public int indexOf(int address) {
+		Node current = first;
+		for(int i=0; i< size ; i++){
+			if (current.block.baseAddress == address) {
+				return i;
+			}
+			current = current.next;
+		}
+		return -1;
+	}
+
 	/**
 	 * Removes the given node from this list.	
 	 * 
@@ -261,8 +272,6 @@ public class LinkedList {
 			str += current.block + " ";
 			current = current.next;
 		}
-
-		// Removes the trailing space and adds the ')'
-		return str. substring(0, str.length());
+		return str;
 	}
 }
