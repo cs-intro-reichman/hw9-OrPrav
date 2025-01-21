@@ -164,7 +164,11 @@ public class LinkedList {
 			throw new IllegalArgumentException(
 					"index must be between 0 and size");
 		}
-		return getNode(index).block;
+		Node current = first;
+		for(int i = 0; i < index; i++){
+			current = current.next;
+		}
+		return current.block;
 	}		
 
 	/**
@@ -185,9 +189,16 @@ public class LinkedList {
 		return -1;
 	}
 
+	/**
+	 * Gets the address of the node pointing to the given memory block.
+	 * 
+	 * @param address
+	 *        the given address
+	 * @return the index of the block, or -1 if the block is not in this list
+	 */
 	public int indexOf(int address) {
 		Node current = first;
-		for(int i=0; i< size ; i++){
+		for(int i=0; i < size ; i++){
 			if (current.block.baseAddress == address) {
 				return i;
 			}

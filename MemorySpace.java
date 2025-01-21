@@ -101,12 +101,14 @@ public class MemorySpace {
 	 */
 	public void free(int address) {
 		int index  = allocatedList.indexOf(address);
-		if (allocatedList.getFirst() == null || index == -1) {
+		if (allocatedList.getSize() == 0 && index == -1) {
 			throw new IllegalArgumentException(
 				"index must be between 0 and size");
 		}
+		if (index >= 0) {
 		freeList.addLast(allocatedList.getBlock(index));// add to freeList
-		allocatedList.remove(allocatedList.getNode(index)); // Delete from allocatedList
+		allocatedList.remove(allocatedList.getBlock(index)); // Delete from allocatedList
+		}
 	}
 	
 	/**
