@@ -125,38 +125,36 @@ public class MemorySpace {
 	 * In this implementation Malloc does not call defrag.
 	 */
 	public void defrag() {
-		if (freeList == null || freeList.getSize() == 0) {
-			return; // No free blocks to defragment
+		if (freeList == null || freeList.getSize() == 0) {// No free blocks to defragment
+			return; 
 		}
 
-		// // Convert free list to an array for sorting
-		// List<MemoryBlock> blocks = new ArrayList<>();
-		// Node current = freeList.getNode(0);
-		// while (current != null) {
-		// 	blocks.add(current.block);
-		// 	current = current.next;
-		// }
+		List<MemoryBlock> addingBlocks = new ArrayList<>();		// Convert free list to an array for sorting
 
-		// // Sort blocks by base address
-		// blocks.sort(Comparator.comparingInt(block -> block.baseAddress));
+		Node current = freeList.getNode(0);
+		while (current != null) {
+			addingBlocks.add(current.block);
+			current = current.next;
+		}
 
-		// // Clear the free list
-		// freeList = new LinkedList();
+		// Sort blocks by base address
+		addingBlocks.sort(Comparator.comparingInt(block -> block.baseAddress));
 
-		// // Merge adjacent blocks
-		// MemoryBlock previous = blocks.get(0);
-		// for (int i = 1; i < blocks.size(); i++) {
-		// 	MemoryBlock currentBlock = blocks.get(i);
-		// 	if (previous.baseAddress + previous.length == currentBlock.baseAddress) {
-		// 		// Merge blocks
-		// 		previous = new MemoryBlock(previous.baseAddress, previous.length + currentBlock.length);
-		// 	} else {
-		// 		// Add the previous block to the free list
-		// 		freeList.addLast(previous);
-		// 		previous = currentBlock;
-		// 	}
-		// }
-		// // Add the last block to the free list
-		// freeList.addLast(previous);
+		freeList = new LinkedList();// Clear the free list, That way, we can use it later
+
+		// Merge adjacent blocks
+		MemoryBlock previousMB = addingBlocks.get(0);
+		for (int i = 1; i < addingBlocks.size(); i++) {
+			MemoryBlock currentMB = addingBlocks.get(i);
+			if (previousMB.baseAddress + previousMB.length == currentMB.baseAddress) { // If the current baseAddress supposed to be the combination of the previous baseAddress and the length
+				previousMB = new MemoryBlock(previousMB.baseAddress, previousMB.length + currentMB.length);				// Merge blocks
+			} else {
+				// Add the previous block to the free list if not Necessary
+				freeList.addLast(previousMB);
+				previousMB = currentMB;
+			}
+		}
+		freeList.addLast(previousMB);// Add the last block to the free list
 	}
+
 }
